@@ -26,13 +26,13 @@
 
 .ring {
   position: absolute;
-  width: 410px;
-  height: 410px;
-  border: 1px solid rgba(210, 245, 99, 0.4);
+  width: 420px;
+  height: 420px;
+  border: 1px solid rgba(210, 245, 99, 0.35);
   border-radius: 50%;
   left: 5%;
   top: 8%;
-  box-shadow: 0 0 22px rgba(210, 245, 99, 0.04);
+  box-shadow: 0 0 24px rgba(210, 245, 99, 0.05);
   will-change: transform;
 }
 
@@ -41,7 +41,7 @@
 }
 
 .ring-two {
-  border-color: rgba(167, 204, 236, 0.27);
+  border-color: rgba(167, 204, 236, 0.25);
   animation: ringTurn 32s linear infinite reverse;
   animation-delay: -8s;
 }
@@ -52,7 +52,7 @@
   left: 15%;
   top: 18%;
   border-style: dashed;
-  border-color: rgba(210, 245, 99, 0.22);
+  border-color: rgba(210, 245, 99, 0.2);
   animation: ringTurn 38s linear infinite;
   animation-delay: -13s;
 }
@@ -74,7 +74,7 @@
     2px 2px 0 #c2c5b7,
     4px 4px 0 #7c8172,
     6px 6px 0 #464b3d,
-    15px 25px 55px rgba(0, 0, 0, 0.6);
+    15px 25px 55px rgba(0, 0, 0, 0.65);
   backface-visibility: hidden;
 }
 
@@ -93,7 +93,7 @@
 }
 
 .third-card {
-  width: 145px;
+  width: 150px;
   right: -1%;
   top: 235px;
   z-index: 3;
@@ -103,8 +103,9 @@
 
 .third-card img {
   width: 100%;
-  height: 185px;
+  height: 190px;
   object-fit: cover;
+  border-radius: 3px;
 }
 
 .third-card > span {
@@ -139,7 +140,7 @@
 }
 
 .work-card h3 {
-  transform: translateZ(18px);
+  transform: translateZ(16px);
 }
 
 .reels {
@@ -148,7 +149,7 @@
 }
 
 .reels-intro {
-  max-width: 320px;
+  max-width: 340px;
 }
 
 .reels-intro p {
@@ -169,22 +170,22 @@
   min-width: 0;
   transform-style: preserve-3d;
   transform: rotateY(var(--fan-angle, 0deg)) translateY(var(--fan-y, 0px));
-  transition: transform 0.35s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reel-card:first-child {
-  --fan-angle: 8deg;
-  --fan-y: 14px;
+  --fan-angle: 7deg;
+  --fan-y: 12px;
 }
 
 .reel-card:last-child {
-  --fan-angle: -8deg;
-  --fan-y: 14px;
+  --fan-angle: -7deg;
+  --fan-y: 12px;
 }
 
 .reel-card:hover,
 .reel-card:focus-within {
-  transform: rotateY(0deg) translateY(-8px);
+  transform: rotateY(0deg) translateY(-10px);
 }
 
 .reel-open {
@@ -194,94 +195,94 @@
   aspect-ratio: 9 / 15.5;
   text-align: left;
   padding: 0;
-  border: 1px solid rgba(115, 126, 87, 0.24);
+  border: 1px solid rgba(115, 126, 87, 0.28);
   border-radius: 24px;
-  background: #24291b;
+  background: #202418;
   color: white;
   cursor: pointer;
   overflow: hidden;
   box-shadow:
-    5px 7px 0 #252c1c,
-    7px 9px 0 #586444,
-    0 25px 50px rgba(0, 0, 0, 0.45);
+    5px 7px 0 #202517,
+    7px 9px 0 #4f5b3b,
+    0 25px 55px rgba(0, 0, 0, 0.5);
+  transition: border-color 0.3s ease;
+}
+
+.reel-open:hover {
+  border-color: rgba(210, 245, 99, 0.4);
 }
 
 .reel-open img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .reel-open:hover img {
-  transform: scale(1.04);
+  transform: scale(1.05);
 }
 
 .reel-open::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(0, 0, 0, 0.45), transparent 30%, rgba(0, 0, 0, 0.06) 40%, rgba(0, 0, 0, 0.88));
+  background: linear-gradient(
+    rgba(0, 0, 0, 0.45),
+    transparent 32%,
+    rgba(0, 0, 0, 0.08) 45%,
+    rgba(0, 0, 0, 0.92)
+  );
 }
 
 .reel-number {
-  position: absolute;
-  top: 22px;
-  left: 22px;
-  z-index: 1;
-  font-size: 12px;
+  font-size: 11px;
   letter-spacing: 2px;
+  font-weight: 700;
+  color: #dee3d8;
 }
 
 .play-icon {
   position: absolute;
-  top: 43%;
-  left: calc(50% - 31px);
-  z-index: 1;
-  width: 62px;
-  height: 62px;
+  top: 42%;
+  left: calc(50% - 32px);
+  z-index: 2;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  background: rgba(17, 19, 16, 0.53);
-  backdrop-filter: blur(8px);
-  border: 1px solid rgba(255, 255, 255, 0.47);
+  background: rgba(17, 19, 16, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   display: grid;
   place-items: center;
-  font-size: 35px;
+  font-size: 32px;
   padding-left: 3px;
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  transition: all 0.25s ease;
 }
 
 .reel-open:hover .play-icon {
   background: var(--accent);
   color: var(--bg);
-  transform: scale(1.1);
+  transform: scale(1.12);
+  border-color: var(--accent);
+  box-shadow: 0 0 25px var(--accent-glow);
 }
 
 .reel-overlay {
   position: absolute;
   inset: auto 24px 28px;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-}
-
-.reel-overlay small {
-  font-size: 12px;
-  letter-spacing: 1.6px;
-  color: var(--accent);
+  gap: 14px;
 }
 
 .reel-overlay strong {
   font-family: 'Manrope', 'DM Sans', sans-serif;
-  font-size: clamp(23px, 2.3vw, 32px);
+  font-size: clamp(22px, 2.3vw, 30px);
   letter-spacing: -1px;
   font-weight: 600;
   line-height: 1.2;
-}
-
-.reel-overlay > span {
-  font-size: 14px;
 }
 
 .reel-bottom {
@@ -306,19 +307,20 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: none;
+  background: rgba(255, 255, 255, 0.02);
   color: var(--accent);
-  border: 1px solid #586444;
+  border: 1px solid #525e3c;
   cursor: pointer;
   font-size: 22px;
   display: grid;
   place-items: center;
-  transition: background 0.2s, border-color 0.2s;
+  transition: all 0.2s ease;
 }
 
 .reel-arrows button:hover:not(:disabled) {
-  background: rgba(210, 245, 99, 0.1);
+  background: rgba(210, 245, 99, 0.12);
   border-color: var(--accent);
+  transform: scale(1.05);
 }
 
 .reel-arrows button:disabled {
@@ -326,21 +328,23 @@
   cursor: default;
 }
 
+/* DIALOG MODAL */
 dialog {
-  background: #161a13;
+  background: #141812;
   color: var(--fg);
-  border: 1px solid #586444;
-  border-radius: 20px;
+  border: 1px solid #4a5538;
+  border-radius: 24px;
   padding: 24px;
-  width: min(480px, calc(100% - 32px));
+  width: min(500px, calc(100% - 32px));
   max-height: calc(100dvh - 32px);
   overflow: auto;
-  box-shadow: 0 30px 120px rgba(0, 0, 0, 0.65);
+  box-shadow: 0 30px 120px rgba(0, 0, 0, 0.75);
 }
 
 dialog::backdrop {
-  background: rgba(3, 6, 3, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(3, 6, 3, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .dialog-header {
@@ -348,48 +352,59 @@ dialog::backdrop {
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
+}
+
+.dialog-badge {
+  display: inline-block;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: var(--accent);
+  font-weight: 700;
+  margin-bottom: 4px;
 }
 
 .dialog-header h2 {
   font-size: 20px;
   letter-spacing: -0.4px;
-  line-height: 1.3;
+  line-height: 1.25;
 }
 
 #close-reel {
   flex-shrink: 0;
-  width: 44px;
-  height: 44px;
-  background: #2a3021;
-  border: 0;
+  width: 42px;
+  height: 42px;
+  background: #252b1e;
+  border: 1px solid #3c4630;
   color: var(--fg);
   border-radius: 50%;
-  font-size: 26px;
+  font-size: 24px;
   cursor: pointer;
   display: grid;
   place-items: center;
-  transition: background 0.2s;
+  transition: all 0.2s;
 }
 
 #close-reel:hover {
-  background: #3b442e;
+  background: #39422d;
+  color: var(--accent);
 }
 
 #reel-player {
   position: relative;
-  min-height: 420px;
-  background: #111310;
-  border-radius: 12px;
+  min-height: 440px;
+  background: #0d0f0c;
+  border-radius: 14px;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 1px solid var(--line);
 }
 
 #reel-player .player-cover {
   width: 100%;
-  height: 420px;
+  height: 440px;
   object-fit: cover;
   opacity: 0.45;
   display: block;
@@ -411,8 +426,8 @@ dialog::backdrop {
   display: block;
   border: 0;
   width: 100%;
-  height: min(580px, 65dvh);
-  min-height: 400px;
+  height: min(600px, 68dvh);
+  min-height: 420px;
   background: white;
 }
 
@@ -424,7 +439,7 @@ dialog::backdrop {
   color: var(--muted);
   font-size: 13px;
   line-height: 1.5;
-  margin: 15px 0 0;
+  margin: 16px 0 0;
   text-align: center;
 }
 
@@ -565,22 +580,22 @@ dialog > .button {
     inset: 68% 0 0;
   }
   .reels-intro {
-    margin-top: 24px;
+    margin-top: 20px;
     max-width: 100%;
   }
   .reel-track {
     display: flex;
-    gap: 22px;
+    gap: 20px;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
-    padding: 18px 8px 30px;
+    padding: 16px 8px 28px;
     scrollbar-width: thin;
     scrollbar-color: #64703f transparent;
     perspective: none;
     overscroll-behavior-x: contain;
   }
   .reel-card {
-    flex: 0 0 83%;
+    flex: 0 0 84%;
     scroll-snap-align: center;
     transform: none !important;
   }
@@ -589,18 +604,15 @@ dialog > .button {
     border-radius: 20px;
   }
   .reel-overlay strong {
-    font-size: 27px;
+    font-size: 26px;
   }
   .reel-arrows {
     display: flex;
   }
   .reel-bottom p {
-    max-width: 200px;
+    max-width: 190px;
     font-size: 12px;
-    line-height: 1.6;
-  }
-  .reel-number {
-    font-size: 12px;
+    line-height: 1.5;
   }
   .motion-control > span {
     font-size: 11px;
@@ -644,11 +656,11 @@ dialog > .button {
     perspective: 1400px;
   }
   .main-card {
-    width: 300px;
+    width: 310px;
     left: 14%;
   }
   .third-card {
-    width: 112px;
+    width: 115px;
     right: 10%;
     top: 230px;
   }

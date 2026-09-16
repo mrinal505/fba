@@ -1,4 +1,4 @@
-// Motion & Accessibility Controls
+// Motion & Accessibility Preferences
 const motion = document.querySelector('#motion');
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
 const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
@@ -29,7 +29,7 @@ reduced.addEventListener('change', () => {
 document.addEventListener('visibilitychange', updateMotion);
 updateMotion();
 
-// Hero 3D Perspective Tilt on Pointer Move
+// Hero 3D Perspective Tilt on Pointer Move & Mobile Touch
 const scene = document.querySelector('.scene');
 const visual = document.querySelector('.visual');
 
@@ -47,9 +47,24 @@ if (visual && scene) {
     scene.style.setProperty('--scene-x', '0deg');
     scene.style.setProperty('--scene-y', '0deg');
   });
+
+  // Mobile Device Orientation Gyro Tilt (if supported & motion enabled)
+  if (window.DeviceOrientationEvent && !finePointer.matches) {
+    window.addEventListener(
+      'deviceorientation',
+      event => {
+        if (paused || reduced.matches || !event.gamma || !event.beta) return;
+        const gamma = Math.max(-20, Math.min(20, event.gamma));
+        const beta = Math.max(-20, Math.min(20, event.beta - 45));
+        scene.style.setProperty('--scene-y', `${gamma * 0.4}deg`);
+        scene.style.setProperty('--scene-x', `${-beta * 0.3}deg`);
+      },
+      { passive: true }
+    );
+  }
 }
 
-// Work Cards 3D Tilt
+// Work Cards 3D Interactive Tilt
 document.querySelectorAll('.work-card').forEach(card => {
   card.addEventListener('pointermove', event => {
     if (paused || reduced.matches || !finePointer.matches) return;
@@ -66,7 +81,7 @@ document.querySelectorAll('.work-card').forEach(card => {
   });
 });
 
-// Pause Decorative Animations when Offscreen (CPU/GPU Optimization)
+// Battery & GPU Saver (Pause visual animations when off-screen)
 if ('IntersectionObserver' in window && visual) {
   const visualObserver = new IntersectionObserver(
     entries => {
@@ -101,7 +116,7 @@ if (dialog && player) {
         originalReelLink.href = `https://www.instagram.com/reel/${id}/`;
       }
 
-      // Build fallback cover & status
+      // Build cover thumbnail & status
       const cover = button.querySelector('img')?.cloneNode(true) || document.createElement('div');
       cover.className = 'player-cover';
       cover.setAttribute('alt', '');
@@ -131,7 +146,7 @@ if (dialog && player) {
 
       setTimeout(() => {
         if (status.isConnected) {
-          status.textContent = 'Preview taking long? Click "Watch on Instagram" above to view directly.';
+          status.textContent = 'Preview taking long? Tap "Watch on Instagram App" above to view directly.';
         }
       }, 7000);
 
@@ -144,7 +159,7 @@ if (dialog && player) {
     closeBtn.addEventListener('click', () => dialog.close());
   }
 
-  // Backdrop click dismiss (mousedown + mouseup check prevents accidental close during drag)
+  // Backdrop click dismiss (safe coordinate detection)
   let isBackdropClick = false;
   dialog.addEventListener('mousedown', event => {
     const rect = dialog.getBoundingClientRect();
@@ -171,7 +186,6 @@ if (dialog && player) {
   });
 
   dialog.addEventListener('close', () => {
-    // Unload iframe immediately to stop audio/video
     player.replaceChildren();
     document.body.style.overflow = '';
     if (triggerButton) {
@@ -188,7 +202,7 @@ const nextBtn = document.querySelector('#reel-next');
 if (track && prevBtn && nextBtn) {
   function scrollReels(direction) {
     const card = track.querySelector('.reel-card');
-    const scrollAmount = card ? card.getBoundingClientRect().width + 24 : 320;
+    const scrollAmount = card ? card.getBoundingClientRect().width + 22 : 300;
     track.scrollBy({
       left: direction * scrollAmount,
       behavior: reduced.matches ? 'instant' : 'smooth',
@@ -213,6 +227,77 @@ if (track && prevBtn && nextBtn) {
     if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
       event.preventDefault();
       scrollReels(event.key === 'ArrowRight' ? 1 : -1);
+    }
+  });
+}
+
+// Circular Scroll Progress Ring & Floating Back to Top
+const floatingTop = document.querySelector('#floating-top');
+const progressCircle = document.querySelector('.progress-ring-bar');
+
+if (floatingTop && progressCircle) {
+  const radius = progressCircle.r.baseVal.value;
+  const circumference = 2 * Math.PI * radius;
+  progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
+  progressCircle.style.strokeDashoffset = circumference;
+
+  function handleScrollProgress() {
+    const scrollTotal = document.documentElement.scrollHeight - window.innerHeight;
+    const currentScroll = window.scrollY;
+
+    if (scrollTotal > 0) {
+      const progress = Math.min(1, Math.max(0, currentScroll / scrollTotal));
+      const offset = circumference - progress * circumference;
+      progressCircle.style.strokeDashoffset = offset;
+    }
+
+    if (currentScroll > 400) {
+      floatingTop.classList.add('visible');
+    } else {
+      floatingTop.classList.remove('visible');
+    }
+  }
+
+  window.addEventListener('scroll', handleScrollProgress, { passive: true });
+
+  floatingTop.addEventListener('click', () => {
+    window.scrollTo({
+      top: 0,
+      behavior: reduced.matches ? 'instant' : 'smooth',
+    });
+  });
+}
+
+// Copy to Clipboard Action with Toast Notification
+const copyBtn = document.querySelector('.copy-email-btn');
+const toast = document.querySelector('#toast');
+
+if (copyBtn && toast) {
+  let toastTimeout;
+  copyBtn.addEventListener('click', async () => {
+    const email = copyBtn.dataset.email || 'mrinaldas2528@gmail.com';
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(email);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = email;
+        textarea.style.position = 'fixed';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+
+      toast.textContent = 'Email copied to clipboard! ✓';
+      toast.classList.add('show');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    } catch {
+      window.location.href = `mailto:${email}`;
     }
   });
 }
