@@ -267,37 +267,3 @@ if (floatingTop && progressCircle) {
     });
   });
 }
-
-// Copy to Clipboard Action with Toast Notification
-const copyBtn = document.querySelector('.copy-email-btn');
-const toast = document.querySelector('#toast');
-
-if (copyBtn && toast) {
-  let toastTimeout;
-  copyBtn.addEventListener('click', async () => {
-    const email = copyBtn.dataset.email || 'mrinaldas2528@gmail.com';
-    try {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(email);
-      } else {
-        const textarea = document.createElement('textarea');
-        textarea.value = email;
-        textarea.style.position = 'fixed';
-        textarea.style.left = '-9999px';
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        textarea.remove();
-      }
-
-      toast.textContent = 'Email copied to clipboard! ✓';
-      toast.classList.add('show');
-      clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        toast.classList.remove('show');
-      }, 3000);
-    } catch {
-      window.location.href = `mailto:${email}`;
-    }
-  });
-}

@@ -345,17 +345,6 @@ em {
   box-shadow: none;
 }
 
-.button-ghost {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--fg);
-  border: 1px dashed var(--line-light);
-}
-
-.button-ghost:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: rgba(210, 245, 99, 0.08);
-}
 
 .text-link {
   font-size: 14px;
@@ -991,17 +980,6 @@ h2 {
   flex-wrap: wrap;
 }
 
-.direct-email-note {
-  margin-top: 28px;
-  font-size: 13px;
-  color: var(--muted);
-}
-
-.direct-email-note a {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
 
 /* FLOATING SCROLL PROGRESS & BACK TO TOP */
 .floating-scroll {
@@ -1059,30 +1037,6 @@ h2 {
   position: relative;
   font-size: 18px;
   font-weight: 700;
-}
-
-/* TOAST NOTIFICATION */
-.toast {
-  position: fixed;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  background: var(--accent);
-  color: var(--bg);
-  font-weight: 700;
-  font-size: 13px;
-  padding: 12px 24px;
-  border-radius: 30px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-  z-index: 100;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.toast.show {
-  transform: translateX(-50%) translateY(0);
-  opacity: 1;
 }
 
 /* FOOTER */
