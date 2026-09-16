@@ -1,0 +1,680 @@
+.visual {
+  perspective: 1100px;
+  isolation: isolate;
+  overflow: visible;
+}
+
+.scene {
+  transform: rotateX(var(--scene-x, 0deg)) rotateY(var(--scene-y, 0deg));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+}
+
+.visual:hover .scene {
+  transition: transform 0.08s ease-out;
+}
+
+.depth-field {
+  position: absolute;
+  inset: 0;
+  perspective: 750px;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.ring {
+  position: absolute;
+  width: 410px;
+  height: 410px;
+  border: 1px solid rgba(210, 245, 99, 0.4);
+  border-radius: 50%;
+  left: 5%;
+  top: 8%;
+  box-shadow: 0 0 22px rgba(210, 245, 99, 0.04);
+  will-change: transform;
+}
+
+.ring-one {
+  animation: ringTurn 24s linear infinite;
+}
+
+.ring-two {
+  border-color: rgba(167, 204, 236, 0.27);
+  animation: ringTurn 32s linear infinite reverse;
+  animation-delay: -8s;
+}
+
+.ring-three {
+  width: 320px;
+  height: 320px;
+  left: 15%;
+  top: 18%;
+  border-style: dashed;
+  border-color: rgba(210, 245, 99, 0.22);
+  animation: ringTurn 38s linear infinite;
+  animation-delay: -13s;
+}
+
+.floor-grid {
+  position: absolute;
+  inset: 65% -5% -5%;
+  background:
+    linear-gradient(rgba(210, 245, 99, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(210, 245, 99, 0.09) 1px, transparent 1px);
+  background-size: 36px 36px;
+  transform: rotateX(65deg) translateZ(-90px);
+  mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+
+.photo-card {
+  box-shadow:
+    2px 2px 0 #c2c5b7,
+    4px 4px 0 #7c8172,
+    6px 6px 0 #464b3d,
+    15px 25px 55px rgba(0, 0, 0, 0.6);
+  backface-visibility: hidden;
+}
+
+.main-card {
+  left: 18%;
+  top: 75px;
+  animation: deepFloat 8s ease-in-out infinite;
+  z-index: 2;
+}
+
+.back-card {
+  left: 0;
+  top: 0;
+  animation: deepBack 10s ease-in-out infinite;
+  z-index: 1;
+}
+
+.third-card {
+  width: 145px;
+  right: -1%;
+  top: 235px;
+  z-index: 3;
+  transform: translateZ(100px) rotateY(-22deg) rotateZ(14deg);
+  animation: deepThird 9s ease-in-out infinite;
+}
+
+.third-card img {
+  width: 100%;
+  height: 185px;
+  object-fit: cover;
+}
+
+.third-card > span {
+  display: block;
+  padding: 9px 0 2px;
+  font-size: 10px;
+}
+
+.location-tag {
+  bottom: 0;
+  right: 15%;
+  z-index: 4;
+  transform: translateZ(130px) rotate(-7deg);
+}
+
+.photo-caption {
+  transform: translateZ(8px);
+}
+
+.work-card {
+  transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-style: preserve-3d;
+}
+
+.work-card:hover {
+  transition: transform 0.08s ease-out;
+}
+
+.work-image {
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+}
+
+.work-card h3 {
+  transform: translateZ(18px);
+}
+
+.reels {
+  border-top: 1px solid var(--line);
+  background: radial-gradient(ellipse at 50% 50%, rgba(210, 245, 99, 0.04), transparent 65%);
+}
+
+.reels-intro {
+  max-width: 320px;
+}
+
+.reels-intro p {
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 16px;
+}
+
+.reel-track {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px;
+  padding: 24px 12px 35px;
+  perspective: 1500px;
+}
+
+.reel-card {
+  min-width: 0;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--fan-angle, 0deg)) translateY(var(--fan-y, 0px));
+  transition: transform 0.35s ease;
+}
+
+.reel-card:first-child {
+  --fan-angle: 8deg;
+  --fan-y: 14px;
+}
+
+.reel-card:last-child {
+  --fan-angle: -8deg;
+  --fan-y: 14px;
+}
+
+.reel-card:hover,
+.reel-card:focus-within {
+  transform: rotateY(0deg) translateY(-8px);
+}
+
+.reel-open {
+  position: relative;
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 15.5;
+  text-align: left;
+  padding: 0;
+  border: 1px solid rgba(115, 126, 87, 0.24);
+  border-radius: 24px;
+  background: #24291b;
+  color: white;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow:
+    5px 7px 0 #252c1c,
+    7px 9px 0 #586444,
+    0 25px 50px rgba(0, 0, 0, 0.45);
+}
+
+.reel-open img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.reel-open:hover img {
+  transform: scale(1.04);
+}
+
+.reel-open::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), transparent 30%, rgba(0, 0, 0, 0.06) 40%, rgba(0, 0, 0, 0.88));
+}
+
+.reel-number {
+  position: absolute;
+  top: 22px;
+  left: 22px;
+  z-index: 1;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.play-icon {
+  position: absolute;
+  top: 43%;
+  left: calc(50% - 31px);
+  z-index: 1;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: rgba(17, 19, 16, 0.53);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.47);
+  display: grid;
+  place-items: center;
+  font-size: 35px;
+  padding-left: 3px;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.reel-open:hover .play-icon {
+  background: var(--accent);
+  color: var(--bg);
+  transform: scale(1.1);
+}
+
+.reel-overlay {
+  position: absolute;
+  inset: auto 24px 28px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reel-overlay small {
+  font-size: 12px;
+  letter-spacing: 1.6px;
+  color: var(--accent);
+}
+
+.reel-overlay strong {
+  font-family: 'Manrope', 'DM Sans', sans-serif;
+  font-size: clamp(23px, 2.3vw, 32px);
+  letter-spacing: -1px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.reel-overlay > span {
+  font-size: 14px;
+}
+
+.reel-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.reel-bottom p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.reel-arrows {
+  display: none;
+  gap: 10px;
+}
+
+.reel-arrows button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: none;
+  color: var(--accent);
+  border: 1px solid #586444;
+  cursor: pointer;
+  font-size: 22px;
+  display: grid;
+  place-items: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.reel-arrows button:hover:not(:disabled) {
+  background: rgba(210, 245, 99, 0.1);
+  border-color: var(--accent);
+}
+
+.reel-arrows button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+dialog {
+  background: #161a13;
+  color: var(--fg);
+  border: 1px solid #586444;
+  border-radius: 20px;
+  padding: 24px;
+  width: min(480px, calc(100% - 32px));
+  max-height: calc(100dvh - 32px);
+  overflow: auto;
+  box-shadow: 0 30px 120px rgba(0, 0, 0, 0.65);
+}
+
+dialog::backdrop {
+  background: rgba(3, 6, 3, 0.85);
+  backdrop-filter: blur(8px);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 16px;
+}
+
+.dialog-header h2 {
+  font-size: 20px;
+  letter-spacing: -0.4px;
+  line-height: 1.3;
+}
+
+#close-reel {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  background: #2a3021;
+  border: 0;
+  color: var(--fg);
+  border-radius: 50%;
+  font-size: 26px;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.2s;
+}
+
+#close-reel:hover {
+  background: #3b442e;
+}
+
+#reel-player {
+  position: relative;
+  min-height: 420px;
+  background: #111310;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#reel-player .player-cover {
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  opacity: 0.45;
+  display: block;
+}
+
+#reel-player .player-status {
+  position: absolute;
+  inset: 45% 20px auto;
+  text-align: center;
+  color: white;
+  line-height: 1.6;
+  font-size: 14px;
+  margin: 0;
+}
+
+#reel-player iframe {
+  position: relative;
+  z-index: 1;
+  display: block;
+  border: 0;
+  width: 100%;
+  height: min(580px, 65dvh);
+  min-height: 400px;
+  background: white;
+}
+
+#reel-player iframe[hidden] {
+  display: none;
+}
+
+.embed-note {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 15px 0 0;
+  text-align: center;
+}
+
+dialog > .button {
+  width: 100%;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.paused .ring,
+.paused .photo-card {
+  animation-play-state: paused !important;
+}
+
+.paused .scene,
+.paused .work-card {
+  transform: none !important;
+}
+
+.paused .reel-card {
+  transition: none;
+}
+
+.motion-hidden .photo-card,
+.motion-hidden .ring {
+  animation-play-state: paused !important;
+}
+
+@keyframes ringTurn {
+  0% {
+    transform: rotateX(62deg) rotateY(-20deg) rotateZ(0deg);
+  }
+  50% {
+    transform: rotateX(72deg) rotateY(35deg) rotateZ(180deg);
+  }
+  100% {
+    transform: rotateX(62deg) rotateY(-20deg) rotateZ(360deg);
+  }
+}
+
+@keyframes deepFloat {
+  0%, 100% {
+    transform: translate3d(0, 0, 35px) rotateY(-20deg) rotateZ(8deg);
+  }
+  50% {
+    transform: translate3d(-8px, -24px, 75px) rotateY(4deg) rotateZ(3deg);
+  }
+}
+
+@keyframes deepBack {
+  0%, 100% {
+    transform: translate3d(0, 0, -65px) rotateY(28deg) rotateZ(-17deg);
+  }
+  50% {
+    transform: translate3d(-12px, 22px, -25px) rotateY(8deg) rotateZ(-11deg);
+  }
+}
+
+@keyframes deepThird {
+  0%, 100% {
+    transform: translate3d(0, 0, 95px) rotateY(-22deg) rotateZ(14deg);
+  }
+  50% {
+    transform: translate3d(4px, -18px, 120px) rotateY(-8deg) rotateZ(9deg);
+  }
+}
+
+@media (max-width: 1000px) {
+  .third-card {
+    width: 120px;
+    right: 0;
+    top: 260px;
+  }
+  .third-card img {
+    height: 145px;
+  }
+  .ring {
+    width: 330px;
+    height: 330px;
+  }
+  .ring-three {
+    width: 270px;
+    height: 270px;
+  }
+  .reel-track {
+    gap: 22px;
+  }
+  .reel-overlay {
+    inset: auto 18px 22px;
+  }
+  .reel-number {
+    left: 18px;
+  }
+  .location-tag {
+    right: 20%;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  .scene {
+    height: 430px;
+  }
+  .main-card {
+    width: 61%;
+    left: 23%;
+    top: 58px;
+  }
+  .third-card {
+    width: 29%;
+    top: 228px;
+    right: 2%;
+    padding: 7px;
+  }
+  .third-card img {
+    height: 145px;
+  }
+  .third-card > span {
+    font-size: 9px;
+  }
+  .location-tag {
+    right: 18%;
+    bottom: 14px;
+  }
+  .ring {
+    width: 280px;
+    height: 280px;
+    left: 8%;
+    top: 15%;
+  }
+  .ring-three {
+    width: 235px;
+    height: 235px;
+    left: 15%;
+    top: 20%;
+  }
+  .floor-grid {
+    inset: 68% 0 0;
+  }
+  .reels-intro {
+    margin-top: 24px;
+    max-width: 100%;
+  }
+  .reel-track {
+    display: flex;
+    gap: 22px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding: 18px 8px 30px;
+    scrollbar-width: thin;
+    scrollbar-color: #64703f transparent;
+    perspective: none;
+    overscroll-behavior-x: contain;
+  }
+  .reel-card {
+    flex: 0 0 83%;
+    scroll-snap-align: center;
+    transform: none !important;
+  }
+  .reel-open {
+    aspect-ratio: 9 / 15;
+    border-radius: 20px;
+  }
+  .reel-overlay strong {
+    font-size: 27px;
+  }
+  .reel-arrows {
+    display: flex;
+  }
+  .reel-bottom p {
+    max-width: 200px;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .reel-number {
+    font-size: 12px;
+  }
+  .motion-control > span {
+    font-size: 11px;
+  }
+  .work-card {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .scene {
+    height: 390px;
+  }
+  .third-card {
+    top: 210px;
+  }
+  .third-card img {
+    height: 115px;
+  }
+  .ring {
+    width: 250px;
+    height: 250px;
+  }
+  .ring-three {
+    width: 200px;
+    height: 200px;
+  }
+  .reel-overlay strong {
+    font-size: 24px;
+  }
+  .reel-bottom {
+    gap: 8px;
+  }
+}
+
+@media (min-width: 701px) {
+  .visual {
+    perspective: 1600px;
+  }
+  .scene {
+    perspective: 1400px;
+  }
+  .main-card {
+    width: 300px;
+    left: 14%;
+  }
+  .third-card {
+    width: 112px;
+    right: 10%;
+    top: 230px;
+  }
+  .third-card img {
+    height: 145px;
+  }
+  .motion-control {
+    margin-top: 55px;
+  }
+  .location-tag {
+    bottom: 10px;
+    right: 24%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene,
+  .work-card,
+  .reel-card {
+    transform: none !important;
+  }
+  .ring,
+  .photo-card {
+    animation: none !important;
+  }
+  .reel-open img {
+    transition: none !important;
+  }
+}
