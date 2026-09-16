@@ -12,17 +12,6 @@ function updateMotion() {
     motion.setAttribute('aria-pressed', String(paused));
     motion.textContent = paused ? 'Resume motion ▷' : 'Pause motion Ⅱ';
   }
-  if (isPaused) {
-    if (typeof revealFullHeading === 'function') revealFullHeading();
-    if (typeof streamTimer !== 'undefined' && streamTimer) {
-      clearTimeout(streamTimer);
-      streamTimer = null;
-    }
-  } else if (typeof headingTyped !== 'undefined' && headingTyped) {
-    if (typeof streamTimer !== 'undefined' && !streamTimer && typeof tickStream === 'function') {
-      tickStream();
-    }
-  }
 }
 
 if (motion) {
@@ -281,6 +270,7 @@ if (floatingTop && progressCircle) {
 
 // Section 03 Alphabet-by-Alphabet Typewriter Animation
 const aboutSection = document.querySelector('#about');
+const aboutHeading = document.querySelector('#about-heading');
 const headingLines = document.querySelectorAll('#about .typewriter-line');
 const streamEl = document.querySelector('#typewriter-stream');
 
@@ -296,68 +286,61 @@ let streamIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
 let streamTimer = null;
-let headingTyped = false;
+let headingAnimationStarted = false;
 let headingTimer = null;
-let currentHeadingCursor = null;
+
+const headingCursor = document.createElement('span');
+headingCursor.className = 'heading-cursor';
+headingCursor.setAttribute('aria-hidden', 'true');
+headingCursor.textContent = '|';
 
 function revealFullHeading() {
   if (headingTimer) {
     clearTimeout(headingTimer);
     headingTimer = null;
   }
-  if (currentHeadingCursor) {
-    currentHeadingCursor.remove();
-    currentHeadingCursor = null;
-  }
+  headingCursor.remove();
   headingLines.forEach(line => {
     line.textContent = line.dataset.typeText || line.textContent;
   });
-  headingTyped = true;
+  headingAnimationStarted = true;
 }
 
-function typeHeadingAlphabetByAlphabet(callback) {
-  if (headingTyped) {
-    if (callback) callback();
-    return;
-  }
-  headingTyped = true;
+function startHeadingTypewriter() {
+  if (headingAnimationStarted) return;
+  headingAnimationStarted = true;
 
   if (paused || reduced.matches) {
     revealFullHeading();
-    if (callback) callback();
+    startStreamTicker();
     return;
   }
 
-  // Clear text initially for typing
-  headingLines.forEach(line => {
-    line.textContent = '';
-  });
+  // Clear text and place cursor in first line
+  headingLines.forEach(line => (line.textContent = ''));
+  if (headingLines.length > 0) {
+    headingLines[0].appendChild(headingCursor);
+  }
 
-  const headingCursor = document.createElement('span');
-  headingCursor.className = 'heading-cursor';
-  headingCursor.setAttribute('aria-hidden', 'true');
-  headingCursor.textContent = '|';
-  currentHeadingCursor = headingCursor;
-
+  const texts = Array.from(headingLines).map(line => line.dataset.typeText || line.textContent || '');
   let currentLineIdx = 0;
   let currentLetterIdx = 0;
 
   function typeNextLetter() {
     if (paused || reduced.matches) {
       revealFullHeading();
-      if (callback) callback();
+      startStreamTicker();
       return;
     }
 
     if (currentLineIdx >= headingLines.length) {
       headingCursor.remove();
-      currentHeadingCursor = null;
-      if (callback) callback();
+      startStreamTicker();
       return;
     }
 
     const currentLine = headingLines[currentLineIdx];
-    const fullText = currentLine.dataset.typeText || '';
+    const fullText = texts[currentLineIdx];
 
     if (!currentLine.contains(headingCursor)) {
       currentLine.appendChild(headingCursor);
@@ -365,7 +348,10 @@ function typeHeadingAlphabetByAlphabet(callback) {
 
     if (currentLetterIdx < fullText.length) {
       const char = fullText.charAt(currentLetterIdx);
-      headingCursor.insertAdjacentText('beforebegin', char);
+      const span = document.createElement('span');
+      span.className = 'typed-char';
+      span.textContent = char;
+      headingCursor.insertAdjacentElement('beforebegin', span);
       currentLetterIdx++;
       headingTimer = setTimeout(typeNextLetter, 45 + Math.random() * 25);
     } else {
@@ -375,7 +361,12 @@ function typeHeadingAlphabetByAlphabet(callback) {
     }
   }
 
-  headingTimer = setTimeout(typeNextLetter, 120);
+  headingTimer = setTimeout(typeNextLetter, 180);
+}
+
+function startStreamTicker() {
+  if (!streamEl || streamTimer) return;
+  tickStream();
 }
 
 function tickStream() {
@@ -413,27 +404,36 @@ function tickStream() {
 }
 
 function initSection3Typewriter() {
-  if (!aboutSection) return;
+  const targetToObserve = aboutHeading || aboutSection;
+  if (!targetToObserve) return;
+
+  if (reduced.matches) {
+    revealFullHeading();
+    if (streamEl) streamEl.textContent = streamPhrases[0];
+    return;
+  }
+
+  // Pre-prepare empty heading with blinking cursor ready to type
+  headingLines.forEach(line => (line.textContent = ''));
+  if (headingLines.length > 0) {
+    headingLines[0].appendChild(headingCursor);
+  }
 
   if ('IntersectionObserver' in window) {
-    const aboutObserver = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       entries => {
         entries.forEach(entry => {
           if (entry.isIntersecting) {
-            typeHeadingAlphabetByAlphabet(() => {
-              tickStream();
-            });
-            aboutObserver.unobserve(aboutSection);
+            startHeadingTypewriter();
+            observer.disconnect();
           }
         });
       },
-      { threshold: 0.15 }
+      { threshold: 0.1, rootMargin: '0px 0px -20px 0px' }
     );
-    aboutObserver.observe(aboutSection);
+    observer.observe(targetToObserve);
   } else {
-    typeHeadingAlphabetByAlphabet(() => {
-      tickStream();
-    });
+    startHeadingTypewriter();
   }
 }
 

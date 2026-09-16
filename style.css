@@ -873,9 +873,22 @@ h2 {
   display: inline-block;
   color: var(--accent);
   font-weight: 300;
+  font-style: normal;
   margin-left: 2px;
   animation: typeBlink 0.75s steps(1) infinite;
   text-shadow: 0 0 12px var(--accent);
+}
+
+.typed-char {
+  display: inline;
+  animation: charPop 0.22s ease-out backwards;
+}
+
+@keyframes charPop {
+  0% {
+    color: var(--accent);
+    text-shadow: 0 0 10px var(--accent);
+  }
 }
 
 .typewriter-ticker {
