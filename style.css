@@ -863,6 +863,72 @@ h2 {
   gap: 10%;
 }
 
+/* TYPEWRITER ANIMATION IN SECTION 03 */
+.typewriter-line {
+  display: inline;
+  position: relative;
+}
+
+.heading-cursor {
+  display: inline-block;
+  color: var(--accent);
+  font-weight: 300;
+  margin-left: 2px;
+  animation: typeBlink 0.75s steps(1) infinite;
+  text-shadow: 0 0 12px var(--accent);
+}
+
+.typewriter-ticker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 8px 16px;
+  background: rgba(210, 245, 99, 0.04);
+  border: 1px solid rgba(210, 245, 99, 0.22);
+  border-radius: 20px;
+  font-size: 13px;
+  color: var(--fg);
+  min-height: 38px;
+  max-width: 100%;
+}
+
+.ticker-prefix {
+  color: var(--accent);
+  font-weight: 800;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  flex-shrink: 0;
+}
+
+.ticker-text {
+  color: #f3f5ee;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.type-cursor {
+  display: inline-block;
+  color: var(--accent);
+  font-weight: 700;
+  animation: typeBlink 0.75s steps(1) infinite;
+  margin-left: 1px;
+  flex-shrink: 0;
+}
+
+@keyframes typeBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+body.paused .heading-cursor,
+body.paused .type-cursor {
+  animation: none;
+  opacity: 1;
+}
+
 .gear-badge {
   display: inline-flex;
   align-items: center;

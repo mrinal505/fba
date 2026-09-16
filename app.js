@@ -12,6 +12,17 @@ function updateMotion() {
     motion.setAttribute('aria-pressed', String(paused));
     motion.textContent = paused ? 'Resume motion ▷' : 'Pause motion Ⅱ';
   }
+  if (isPaused) {
+    if (typeof revealFullHeading === 'function') revealFullHeading();
+    if (typeof streamTimer !== 'undefined' && streamTimer) {
+      clearTimeout(streamTimer);
+      streamTimer = null;
+    }
+  } else if (typeof headingTyped !== 'undefined' && headingTyped) {
+    if (typeof streamTimer !== 'undefined' && !streamTimer && typeof tickStream === 'function') {
+      tickStream();
+    }
+  }
 }
 
 if (motion) {
@@ -267,3 +278,163 @@ if (floatingTop && progressCircle) {
     });
   });
 }
+
+// Section 03 Alphabet-by-Alphabet Typewriter Animation
+const aboutSection = document.querySelector('#about');
+const headingLines = document.querySelectorAll('#about .typewriter-line');
+const streamEl = document.querySelector('#typewriter-stream');
+
+const streamPhrases = [
+  'Festivals & Durga Puja',
+  'Street Food & Local Cafés',
+  'Untold Stories of Barakar',
+  'People & Culture of Asansol',
+  'High-Energy Viral Reels',
+];
+
+let streamIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let streamTimer = null;
+let headingTyped = false;
+let headingTimer = null;
+let currentHeadingCursor = null;
+
+function revealFullHeading() {
+  if (headingTimer) {
+    clearTimeout(headingTimer);
+    headingTimer = null;
+  }
+  if (currentHeadingCursor) {
+    currentHeadingCursor.remove();
+    currentHeadingCursor = null;
+  }
+  headingLines.forEach(line => {
+    line.textContent = line.dataset.typeText || line.textContent;
+  });
+  headingTyped = true;
+}
+
+function typeHeadingAlphabetByAlphabet(callback) {
+  if (headingTyped) {
+    if (callback) callback();
+    return;
+  }
+  headingTyped = true;
+
+  if (paused || reduced.matches) {
+    revealFullHeading();
+    if (callback) callback();
+    return;
+  }
+
+  // Clear text initially for typing
+  headingLines.forEach(line => {
+    line.textContent = '';
+  });
+
+  const headingCursor = document.createElement('span');
+  headingCursor.className = 'heading-cursor';
+  headingCursor.setAttribute('aria-hidden', 'true');
+  headingCursor.textContent = '|';
+  currentHeadingCursor = headingCursor;
+
+  let currentLineIdx = 0;
+  let currentLetterIdx = 0;
+
+  function typeNextLetter() {
+    if (paused || reduced.matches) {
+      revealFullHeading();
+      if (callback) callback();
+      return;
+    }
+
+    if (currentLineIdx >= headingLines.length) {
+      headingCursor.remove();
+      currentHeadingCursor = null;
+      if (callback) callback();
+      return;
+    }
+
+    const currentLine = headingLines[currentLineIdx];
+    const fullText = currentLine.dataset.typeText || '';
+
+    if (!currentLine.contains(headingCursor)) {
+      currentLine.appendChild(headingCursor);
+    }
+
+    if (currentLetterIdx < fullText.length) {
+      const char = fullText.charAt(currentLetterIdx);
+      headingCursor.insertAdjacentText('beforebegin', char);
+      currentLetterIdx++;
+      headingTimer = setTimeout(typeNextLetter, 45 + Math.random() * 25);
+    } else {
+      currentLineIdx++;
+      currentLetterIdx = 0;
+      headingTimer = setTimeout(typeNextLetter, 220);
+    }
+  }
+
+  headingTimer = setTimeout(typeNextLetter, 120);
+}
+
+function tickStream() {
+  if (!streamEl) return;
+
+  if (paused || reduced.matches) {
+    streamEl.textContent = streamPhrases[streamIndex];
+    return;
+  }
+
+  const currentPhrase = streamPhrases[streamIndex];
+
+  if (!isDeleting) {
+    streamEl.textContent = currentPhrase.substring(0, charIndex + 1);
+    charIndex++;
+
+    if (charIndex === currentPhrase.length) {
+      isDeleting = true;
+      streamTimer = setTimeout(tickStream, 2200);
+      return;
+    }
+    streamTimer = setTimeout(tickStream, 65 + Math.random() * 20);
+  } else {
+    streamEl.textContent = currentPhrase.substring(0, charIndex - 1);
+    charIndex--;
+
+    if (charIndex === 0) {
+      isDeleting = false;
+      streamIndex = (streamIndex + 1) % streamPhrases.length;
+      streamTimer = setTimeout(tickStream, 400);
+      return;
+    }
+    streamTimer = setTimeout(tickStream, 35);
+  }
+}
+
+function initSection3Typewriter() {
+  if (!aboutSection) return;
+
+  if ('IntersectionObserver' in window) {
+    const aboutObserver = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            typeHeadingAlphabetByAlphabet(() => {
+              tickStream();
+            });
+            aboutObserver.unobserve(aboutSection);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+    aboutObserver.observe(aboutSection);
+  } else {
+    typeHeadingAlphabetByAlphabet(() => {
+      tickStream();
+    });
+  }
+}
+
+initSection3Typewriter();
